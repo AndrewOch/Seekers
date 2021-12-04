@@ -4,10 +4,10 @@ import java.util.Random;
 
 public enum Gender {
 
-    MALE("мужчина"),
-    FEMALE("женщина");
+    MALE("Мужчина"),
+    FEMALE("Женщина");
 
-    private String title;
+    private final String title;
 
     Gender(String title) {
         this.title = title;

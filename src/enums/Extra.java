@@ -4,11 +4,11 @@ import java.util.Random;
 
 public enum Extra {
 
-    SIMPLE("простак"),
+    NO_INFO("нет информации"),
     LEFT_HANDED("левша"),
     MASTER("мастер на все руки");
 
-    private String title;
+    private final String title;
 
     Extra(String title) {
         this.title = title;

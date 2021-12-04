@@ -12,8 +12,8 @@ public enum Item {
     PHONE(5, "телефон"),
     APPLE(6, "яблоко");
 
-    private Integer id;
-    private String title;
+    private final Integer id;
+    private final String title;
 
     Item(Integer id, String title) {
         this.id = id;
