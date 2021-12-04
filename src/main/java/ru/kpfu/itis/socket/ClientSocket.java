@@ -1,4 +1,4 @@
-package main.java.ru.kpfu.itis.socket;
+package ru.kpfu.itis.socket;
 
 import java.io.IOException;
 import java.io.PrintWriter;

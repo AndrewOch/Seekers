@@ -1,4 +1,4 @@
-package main.java.ru.kpfu.itis.enums;
+package ru.kpfu.itis.enums;
 
 public enum Action {
 

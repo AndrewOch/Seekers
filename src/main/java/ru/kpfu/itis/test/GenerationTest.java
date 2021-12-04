@@ -1,6 +1,6 @@
-package main.java.ru.kpfu.itis.test;
+package ru.kpfu.itis.test;
 
-import main.java.ru.kpfu.itis.client.Seeker;
+import ru.kpfu.itis.client.Seeker;
 
 public class GenerationTest {
     public static void main(String[] args) {

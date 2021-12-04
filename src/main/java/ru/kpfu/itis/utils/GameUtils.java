@@ -1,4 +1,4 @@
-package main.java.ru.kpfu.itis.utils;
+package ru.kpfu.itis.utils;
 
 import javafx.scene.image.ImageView;
 
