@@ -1,20 +1,19 @@
-package enums;
+package main.java.ru.kpfu.itis.enums.gameParameters;
 
 import java.util.Random;
 
 public enum Health {
 
     PERFECT("идеальное здоровье"),
-    CANCER_LUNGS("рак лёгких"),
-    CANCER_BRAIN("рак мозга"),
-    CANCER_LIVER("рак печени"),
+    CANCER("рак"),
     BROKE_ARM("перелом руки"),
     BROKE_LEG("перелом ноги"),
     BROKE_FINGER("перелом пальца"),
     GOUT("подагра"),
     NO_ILL("не болеет"),
+    BLACK_DEATH("чума"),
+    SYPHILIS("сифилис"),
     RUNNY_NOSE("насморк"),
-    AIDS("СПИД"),
     IMMORTAL("бессмертие");
 
     private final String title;

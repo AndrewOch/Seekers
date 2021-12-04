@@ -1,15 +1,15 @@
-package enums;
+package main.java.ru.kpfu.itis.enums.gameParameters;
 
 import java.util.Random;
 
 public enum Item {
 
-    GUN(0, "пистолет"),
+    STICK(0, "палка"),
     KNIFE(1, "нож"),
     BREAD(2, "хлеб"),
-    DRUGS(3, "лекарства"),
-    SOCKS(4, "носки"),
-    PHONE(5, "телефон"),
+    HEALING_HERBS(3, "целебные травы"),
+    SOCKS(4, "лапти"),
+    BASKET(5, "корзина"),
     APPLE(6, "яблоко");
 
     private final Integer id;

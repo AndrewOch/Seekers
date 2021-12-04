@@ -1,4 +1,4 @@
-package enums;
+package main.java.ru.kpfu.itis.enums.gameParameters;
 
 import java.util.Random;
 
