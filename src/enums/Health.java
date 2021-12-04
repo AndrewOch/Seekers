@@ -17,7 +17,7 @@ public enum Health {
     AIDS("СПИД"),
     IMMORTAL("бессмертие");
 
-    private String title;
+    private final String title;
 
     Health(String title) {
         this.title = title;

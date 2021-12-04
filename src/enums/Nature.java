@@ -7,7 +7,7 @@ public enum Nature {
     CALM("спокойный"),
     PASSIONATE("вспыльчивый");
 
-    private String title;
+    private final String title;
 
     Nature(String title) {
         this.title = title;

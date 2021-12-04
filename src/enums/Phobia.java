@@ -7,7 +7,7 @@ public enum Phobia {
     NO_PHOBIA("нет"),
     ARACHNOPHOBIA("арахнофобия (боязнь пауков)");
 
-    private String title;
+    private final String title;
 
     Phobia(String title) {
         this.title = title;

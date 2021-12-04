@@ -19,9 +19,11 @@ public class Person {
     private List<Item> inventory;
 
     public Person(String username) {
+        Random random = new Random();
+
         this.name = username;
         this.gender = Gender.random();
-        this.age = new Random().nextInt(80) + 18;
+        this.age = random.nextInt(80) + 18;
         this.health = Health.random();
         this.hobby = Hobby.random();
         this.nature = Nature.random();
@@ -30,6 +32,12 @@ public class Person {
 
         this.inventory = new ArrayList<>();
         this.inventory.add(Item.random());
+        if (random.nextInt(100) < 30) {
+            this.inventory.add(Item.random());
+        }
+        if (random.nextInt(100) < 5) {
+            this.inventory.add(Item.random());
+        }
     }
 
     @Override

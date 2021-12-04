@@ -7,7 +7,7 @@ public enum Hobby {
     NO_HOBBY("нет"),
     SEWING("шитьё");
 
-    private String title;
+    private final String title;
 
     Hobby(String title) {
         this.title = title;
