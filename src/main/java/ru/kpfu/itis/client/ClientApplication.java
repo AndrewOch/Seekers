@@ -1,11 +1,11 @@
-package main.java.ru.kpfu.itis.client;
+package ru.kpfu.itis.client;
 
-import main.java.ru.kpfu.itis.controller.MainController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import ru.kpfu.itis.controller.MainController;
 
 public class ClientApplication extends Application {
 

@@ -1,6 +1,6 @@
-package main.java.ru.kpfu.itis.client;
+package ru.kpfu.itis.client;
 
-import main.java.ru.kpfu.itis.enums.gameParameters.*;
+import ru.kpfu.itis.enums.gameParameters.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,11 +11,10 @@ public class Seeker {
     private String name;
     private Gender gender;
     private Integer age;
-    private Health health;
+    private Past past;
     private Job job;
     private Nature nature;
-    private Phobia phobia;
-    private Extra extra;
+    private Gossip gossip;
     private List<Item> inventory;
     private Dream dream;
 
@@ -26,11 +25,10 @@ public class Seeker {
         this.name = username;
         this.gender = Gender.random();
         this.age = random.nextInt(80) + 18;
-        this.health = Health.random();
+        this.past = Past.random();
         this.job = Job.random();
         this.nature = Nature.random();
-        this.phobia = Phobia.random();
-        this.extra = Extra.random();
+        this.gossip = Gossip.random();
 
         this.inventory = new ArrayList<>();
         this.inventory.add(Item.random());
@@ -57,13 +55,11 @@ public class Seeker {
 
         return name + ":\n" +
                 gender.getTitle() + ", " + age + " " + agePostfix + "\n" +
-                "Здоровье: " + health.getTitle() + '\n' +
-                "Хобби: " + job.getTitle() + '\n' +
+                "Работа: " + job.getTitle() + '\n' +
                 "Характер: " + nature.getTitle() + '\n' +
-                "Фобия: " + phobia.getTitle() + '\n' +
-                "Дополнительно: " + extra.getTitle() + '\n' +
+                "Прошлое: " + past.getTitle() + '\n' +
+                "Слухи: " + gossip.getTitle() + '\n' +
                 "Инвентарь: " + inventory + '\n' +
                 "Мечта: " + dream.getTitle() + '\n';
-
     }
 }

@@ -1,4 +1,4 @@
-package main.java.ru.kpfu.itis.enums.gameParameters;
+package ru.kpfu.itis.enums.gameParameters;
 
 import java.util.Random;
 
@@ -10,7 +10,16 @@ public enum Item {
     HEALING_HERBS(3, "целебные травы"),
     SOCKS(4, "лапти"),
     BASKET(5, "корзина"),
-    APPLE(6, "яблоко");
+    APPLE(6, "яблоко"),
+    SWORD(1, "меч"),
+    POISON(1, "яд"),
+    SKULL(1, "череп"),
+    PENTAGRAM(1, "пентаграмма"),
+    MONEY_BAG(1, "кошель монет"),
+    NECKLACE(1, "ожерелье"),
+    CAKE(1, "тортик"),
+    BOOK(1, "книга"),
+    ;
 
     private final Integer id;
     private final String title;

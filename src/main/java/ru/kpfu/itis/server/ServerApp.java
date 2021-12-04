@@ -1,4 +1,4 @@
-package main.java.ru.kpfu.itis.server;
+package ru.kpfu.itis.server;
 
 import java.io.BufferedReader;
 import java.io.IOException;

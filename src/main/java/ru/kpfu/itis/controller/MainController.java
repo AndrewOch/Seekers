@@ -1,6 +1,5 @@
-package main.java.ru.kpfu.itis.controller;
+package ru.kpfu.itis.controller;
 
-import main.java.ru.kpfu.itis.enums.Action;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -8,8 +7,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
-import main.java.ru.kpfu.itis.socket.ClientSocket;
-import main.java.ru.kpfu.itis.utils.GameUtils;
+import ru.kpfu.itis.enums.Action;
+import ru.kpfu.itis.socket.ClientSocket;
+import ru.kpfu.itis.utils.GameUtils;
 
 import java.net.URL;
 import java.util.ResourceBundle;
