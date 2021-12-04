@@ -1,31 +1,33 @@
-package client;
+package main.java.ru.kpfu.itis.client;
 
-import enums.*;
+import main.java.ru.kpfu.itis.enums.gameParameters.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class Person {
+public class Seeker {
 
     private String name;
     private Gender gender;
     private Integer age;
     private Health health;
-    private Hobby hobby;
+    private Job job;
     private Nature nature;
     private Phobia phobia;
     private Extra extra;
     private List<Item> inventory;
+    private Dream dream;
 
-    public Person(String username) {
+
+    public Seeker(String username) {
         Random random = new Random();
 
         this.name = username;
         this.gender = Gender.random();
         this.age = random.nextInt(80) + 18;
         this.health = Health.random();
-        this.hobby = Hobby.random();
+        this.job = Job.random();
         this.nature = Nature.random();
         this.phobia = Phobia.random();
         this.extra = Extra.random();
@@ -38,6 +40,8 @@ public class Person {
         if (random.nextInt(100) < 5) {
             this.inventory.add(Item.random());
         }
+
+        this.dream = Dream.random();
     }
 
     @Override
@@ -54,20 +58,12 @@ public class Person {
         return name + ":\n" +
                 gender.getTitle() + ", " + age + " " + agePostfix + "\n" +
                 "Здоровье: " + health.getTitle() + '\n' +
-                "Хобби: " + hobby.getTitle() + '\n' +
+                "Хобби: " + job.getTitle() + '\n' +
                 "Характер: " + nature.getTitle() + '\n' +
                 "Фобия: " + phobia.getTitle() + '\n' +
                 "Дополнительно: " + extra.getTitle() + '\n' +
-                "Инвентарь: " + inventory + '\n';
-    }
-}
+                "Инвентарь: " + inventory + '\n' +
+                "Мечта: " + dream.getTitle() + '\n';
 
-class GenerationTest {
-    public static void main(String[] args) {
-        System.out.println(new Person("Andrew"));
-        System.out.println(new Person("Fernando"));
-        System.out.println(new Person("Loren"));
-        System.out.println(new Person("Thomas"));
-        System.out.println(new Person("Ann"));
     }
 }
