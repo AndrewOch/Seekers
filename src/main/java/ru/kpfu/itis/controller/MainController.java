@@ -61,7 +61,7 @@ public class MainController implements Initializable {
                 break;
             }
             case LEFT: {
-                gameUtils.goOut(player);
+                gameUtils.loot(player);
                 clientSocket.sendMessage(Action.GO_OUT.getCode());
                 System.out.println(Action.GO_OUT.getDescription());
                 break;
