@@ -11,9 +11,9 @@ public class Seeker {
     private String name;
     private Gender gender;
     private Integer age;
-    private Past past;
     private Job job;
     private Nature nature;
+    private Past past;
     private Gossip gossip;
     private List<Item> inventory;
     private Dream dream;
@@ -61,5 +61,41 @@ public class Seeker {
                 "Слухи: " + gossip.getTitle() + '\n' +
                 "Инвентарь: " + inventory + '\n' +
                 "Мечта: " + dream.getTitle() + '\n';
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public Job getJob() {
+        return job;
+    }
+
+    public Nature getNature() {
+        return nature;
+    }
+
+    public Past getPast() {
+        return past;
+    }
+
+    public Gossip getGossip() {
+        return gossip;
+    }
+
+    public List<Item> getInventory() {
+        return inventory;
+    }
+
+    public Dream getDream() {
+        return dream;
     }
 }

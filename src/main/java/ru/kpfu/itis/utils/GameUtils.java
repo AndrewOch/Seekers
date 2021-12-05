@@ -4,7 +4,7 @@ import javafx.scene.image.ImageView;
 
 public class GameUtils {
 
-    public void goOut(ImageView person) {
+    public void loot(ImageView person) {
         //TODO
     }
 
