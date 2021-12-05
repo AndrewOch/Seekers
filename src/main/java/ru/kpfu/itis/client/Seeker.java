@@ -18,6 +18,12 @@ public class Seeker {
     private List<Item> inventory;
     private Dream dream;
 
+    private Integer lootingRemaining = 1;
+    private Boolean revealedOwnInfo = false;
+    private Boolean readyForVote = false;
+
+    private boolean[] revealed = new boolean[6];
+
 
     public Seeker(String username) {
         Random random = new Random();
@@ -61,6 +67,38 @@ public class Seeker {
                 "Слухи: " + gossip.getTitle() + '\n' +
                 "Инвентарь: " + inventory + '\n' +
                 "Мечта: " + dream.getTitle() + '\n';
+    }
+
+    public Integer getLootingRemaining() {
+        return lootingRemaining;
+    }
+
+    public void setLootingRemaining(Integer lootingRemaining) {
+        this.lootingRemaining = lootingRemaining;
+    }
+
+    public Boolean getRevealedOwnInfo() {
+        return revealedOwnInfo;
+    }
+
+    public void setRevealedOwnInfo(Boolean revealedOwnInfo) {
+        this.revealedOwnInfo = revealedOwnInfo;
+    }
+
+    public boolean[] getRevealed() {
+        return revealed;
+    }
+
+    public void setRevealed(boolean[] revealed) {
+        this.revealed = revealed;
+    }
+
+    public Boolean getReadyForVote() {
+        return readyForVote;
+    }
+
+    public void setReadyForVote(Boolean readyForVote) {
+        this.readyForVote = readyForVote;
     }
 
     public String getName() {

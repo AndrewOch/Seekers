@@ -5,23 +5,90 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="ru.kpfu.itis.controller.Controller"
-            prefHeight="720.0" prefWidth="1280.0">
+            prefHeight="720.0" prefWidth="1280.0"
+            stylesheets="style.css">
 
+    <HBox xmlns="http://javafx.com/javafx"
+          xmlns:fx="http://javafx.com/fxml" spacing="20">
+        <VBox xmlns="http://javafx.com/javafx"
+              xmlns:fx="http://javafx.com/fxml">
+            <Label fx:id="username" text="Имя"/>
 
-    <VBox xmlns="http://javafx.com/javafx"
+            <Label fx:id="userGenderAndAge" text="Пол и возраст"/>
+            <Label fx:id="userJob" text="Работа"/>
+            <Label fx:id="userNature" text="Характер"/>
+            <Label fx:id="userPast" text="Прошлое"/>
+            <Label fx:id="userGossip" text="Слухи"/>
+            <Label fx:id="userInventory" text="Инвентарь"/>
+            <Label fx:id="userDream" text="Мечта"/>
+
+            <VBox xmlns="http://javafx.com/javafx"
+                  xmlns:fx="http://javafx.com/fxml" spacing="5">
+                <Button fx:id="loot" text="Обыскать башню"/>
+                <Button fx:id="spy" text="Посмотреть в палантир"/>
+                <Button fx:id="readyForVote" text="Готов к голосованию"/>
+                <Label fx:id="hint"/>
+            </VBox>
+
+            <VBox fx:id="userRevealPanel" xmlns="http://javafx.com/javafx"
+                  xmlns:fx="http://javafx.com/fxml" spacing="5">
+                <Label text="Раскрыть:"/>
+
+                <Button fx:id="userRGenderAndAge" text="Пол и возраст"/>
+                <Button fx:id="userRJob" text="Работа"/>
+                <Button fx:id="userRNature" text="Характер"/>
+                <Button fx:id="userRPast" text="Прошлое"/>
+                <Button fx:id="userRGossip" text="Слухи"/>
+                <Button fx:id="userRDream" text="Мечта"/>
+            </VBox>
+        </VBox>
+        <VBox xmlns="http://javafx.com/javafx"
+              xmlns:fx="http://javafx.com/fxml" spacing="5">
+            <Button fx:id="opponent1" text="Имя"/>
+            <Button fx:id="opponent2" text="Игрок2"/>
+            <Button fx:id="opponent3" text="Игрок3"/>
+            <Button fx:id="opponent4" text="Игрок4"/>
+            <Button fx:id="opponent5" text="Игрок5"/>
+            <Button fx:id="opponent6" text="Игрок6"/>
+            <Button fx:id="opponent7" text="Игрок7"/>
+
+        </VBox>
+        <VBox xmlns="http://javafx.com/javafx"
+              xmlns:fx="http://javafx.com/fxml">
+            <Label fx:id="opponentUsername" text="Hello world!"/>
+
+            <VBox fx:id="opponentInfo" xmlns="http://javafx.com/javafx"
+                  xmlns:fx="http://javafx.com/fxml" spacing="5">
+                <Label fx:id="opponentGenderAndAge" text="Hello world!"/>
+                <Label fx:id="opponentJob" text="Hello world!"/>
+                <Label fx:id="opponentNature" text="Hello world!"/>
+                <Label fx:id="opponentPast" text="Hello world!"/>
+                <Label fx:id="opponentGossip" text="Hello world!"/>
+                <Label fx:id="opponentInventory" text="Hello world!"/>
+                <Label fx:id="opponentDream" text="Hello world!"/>
+            </VBox>
+
+            <VBox fx:id="revealPanel" visible="false" xmlns="http://javafx.com/javafx"
+                  xmlns:fx="http://javafx.com/fxml" spacing="5">
+                <Label text="Раскрыть:"/>
+
+                <Button fx:id="revealGenderAndAge" text="Пол и возраст"/>
+                <Button fx:id="revealJob" text="Работа"/>
+                <Button fx:id="revealNature" text="Характер"/>
+                <Button fx:id="revealPast" text="Прошлое"/>
+                <Button fx:id="revealGossip" text="Слухи"/>
+                <Button fx:id="revealDream" text="Мечта"/>
+            </VBox>
+        </VBox>
+    </HBox>
+
+    <VBox fx:id="chat" visible="false" xmlns="http://javafx.com/javafx"
           xmlns:fx="http://javafx.com/fxml">
-        <Label fx:id="username" text="Hello world!"/>
-
-        <Label fx:id="userGenderAndAge" text="Hello world!"/>
-        <Label fx:id="userJob" text="Hello world!"/>
-        <Label fx:id="userNature" text="Hello world!"/>
-        <Label fx:id="userPast" text="Hello world!"/>
-        <Label fx:id="userGossip" text="Hello world!"/>
-        <Label fx:id="userInventory" text="Hello world!"/>
-        <Label fx:id="userDream" text="Hello world!"/>
+        <Label text="======Чат======"/>
     </VBox>
 
 </AnchorPane>

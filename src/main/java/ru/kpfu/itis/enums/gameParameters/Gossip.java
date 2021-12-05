@@ -7,9 +7,9 @@ public enum Gossip {
     NO_INFO("нет информации"),
     LEFT_HANDED("левша"),
     GOOD_REPUTATION("хорошая репутация"),
-    STRANGE("странный"),
-    RELIABLE("надежный"),
-    SUSPICIOUS("подозрительный"),
+    STRANGE("странный(ая)"),
+    RELIABLE("надежный(ая)"),
+    SUSPICIOUS("подозрительный(ая)"),
     KNOWS_BEER("знает толк в пиве"),
     KNOWS_MEDICINE("знает толк в медицине"),
     MASTER("мастер на все руки");

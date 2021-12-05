@@ -18,7 +18,7 @@ public enum Item {
     MONEY_BAG(1, "кошель монет"),
     NECKLACE(1, "ожерелье"),
     CAKE(1, "тортик"),
-    BOOK(1, "книга"),
+    BOOK(1, "книга")
     ;
 
     private final Integer id;
