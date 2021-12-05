@@ -61,13 +61,13 @@ public class MainController implements Initializable {
                 break;
             }
             case LEFT: {
-                gameUtils.loot(player);
+                //gameUtils.loot(player);
                 clientSocket.sendMessage(Action.GO_OUT.getCode());
                 System.out.println(Action.GO_OUT.getDescription());
                 break;
             }
             case SPACE: {
-                gameUtils.spy(player);
+                //gameUtils.spy(player);
                 clientSocket.sendMessage(Action.GO_OUT.getCode());
                 System.out.println(Action.GO_OUT.getDescription());
             }
