@@ -151,4 +151,40 @@ public class Seeker {
     public void setUuid(UUID uuid) {
         this.uuid = uuid;
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    public void setJob(Job job) {
+        this.job = job;
+    }
+
+    public void setNature(Nature nature) {
+        this.nature = nature;
+    }
+
+    public void setPast(Past past) {
+        this.past = past;
+    }
+
+    public void setGossip(Gossip gossip) {
+        this.gossip = gossip;
+    }
+
+    public void setInventory(List<Item> inventory) {
+        this.inventory = inventory;
+    }
+
+    public void setDream(Dream dream) {
+        this.dream = dream;
+    }
 }

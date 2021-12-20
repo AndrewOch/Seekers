@@ -66,7 +66,6 @@ public class Client extends Thread {
                             this.seeker = new Seeker(nickname);
                             Message createCharacterMessage = new Message();
                             createCharacterMessage.setType(MessageType.CREATE_CHARACTER);
-                            createCharacterMessage.addHeader("id", String.valueOf(server.getClients().indexOf(this)));
                             createCharacterMessage.setBody(new ObjectMapper().writeValueAsString(seeker));
                             sendMessage(createCharacterMessage);
 
@@ -83,13 +82,15 @@ public class Client extends Thread {
                                 for (Client client : clients) {
                                     client.sendMessage(alarm);
                                 }
-                                alarm.setBody("Добро пожаловать в башню мага! Волшебник исполнит любую вашу мечту, " +
-                                        "но только двоим из вас. Решите, кто это будет. Пусть все раскроют правду о себе" +
-                                        " и затем вы проголосуете против одного из вас.");
+                                alarm.setBody("Добро пожаловать в башню мага! Волшебник исполнит любую вашу мечту, но только двоим из вас.");
+                                for (Client client : clients) {
+                                    client.sendMessage(alarm);
+                                }
+                                alarm.setBody("Решите, кто это будет. Пусть все раскроют правду о себе и затем вы проголосуете против одного из вас.");
                                 Message start = new Message();
                                 start.setType(MessageType.READY_FOR_START);
                                 for (Client client : clients) {
-                                    client.sendMessage(alarm);
+                                    client.sendMessage(start);
                                 }
                             } else {
                                 alarm.setBody(nickname + " вошёл в игру. Для начала требуется ещё игроков: " + server.playersRemainingToPlay());
@@ -103,7 +104,6 @@ public class Client extends Thread {
 
                             Message connectToOthers = new Message();
                             connectToOthers.setType(MessageType.CONNECT_TO_OTHER_PLAYER);
-                            connectToOthers.addHeader("id", String.valueOf(server.getClients().indexOf(this)));
                             connectToOthers.setBody(new ObjectMapper().writeValueAsString(seeker));
 
                             for (Client client : clients) {
@@ -112,7 +112,6 @@ public class Client extends Thread {
 
                                     Message connectTo = new Message();
                                     connectTo.setType(MessageType.CONNECT_TO_OTHER_PLAYER);
-                                    connectTo.addHeader("id", String.valueOf(server.getClients().indexOf(this)));
                                     connectTo.setBody(new ObjectMapper().writeValueAsString(client.seeker));
                                     this.sendMessage(connectTo);
                                 }
@@ -130,6 +129,92 @@ public class Client extends Thread {
                                 client.sendMessage(message);
                             }
 
+                            break;
+                        }
+                        case REVEAL_SELF: {
+                            seeker = new ObjectMapper().readValue(message.getBody(), Seeker.class);
+
+                            Message alarm = new Message();
+                            alarm.setType(MessageType.CHAT);
+                            alarm.setBody(seeker.getName() + " раскрыл(а) правду о себе: " + message.getHeaders().get("revealed"));
+                            for (Client client : clients) {
+                                client.sendMessage(alarm);
+                            }
+
+                            Message updateInfo = new Message();
+                            updateInfo.setType(MessageType.UPDATE_INFO);
+                            updateInfo.setBody(new ObjectMapper().writeValueAsString(seeker));
+                            for (Client client : clients) {
+                                if (!this.equals(client)) {
+                                    client.sendMessage(updateInfo);
+                                }
+                            }
+                            break;
+                        }
+                        case REVEAL: {
+                            Seeker s = new ObjectMapper().readValue(message.getBody(), Seeker.class);
+                            for (Client client : clients) {
+                                if (client.seeker.getUuid().equals(s.getUuid())) {
+                                    client.seeker = s;
+                                }
+                            }
+
+                            Message alarm = new Message();
+                            alarm.setType(MessageType.CHAT);
+                            alarm.setBody(seeker.getName() + " раскрыл(а) правду о " + s.getName() + ": " + message.getHeaders().get("revealed"));
+                            for (Client client : clients) {
+                                client.sendMessage(alarm);
+                            }
+
+                            Message updateInfo = new Message();
+                            updateInfo.setType(MessageType.UPDATE_INFO);
+                            updateInfo.setBody(new ObjectMapper().writeValueAsString(s));
+                            for (Client client : clients) {
+                                if (!this.equals(client)) {
+                                    client.sendMessage(updateInfo);
+                                }
+                            }
+                            break;
+                        }
+                        case LOOT: {
+                            seeker = new ObjectMapper().readValue(message.getBody(), Seeker.class);
+
+                            Message alarm = new Message();
+                            alarm.setType(MessageType.CHAT);
+                            alarm.setBody(seeker.getName() + " обыскал башню и нашёл: " + message.getHeaders().get("found"));
+                            for (Client client : clients) {
+                                client.sendMessage(alarm);
+                            }
+
+                            Message updateInfo = new Message();
+                            updateInfo.setType(MessageType.UPDATE_INFO);
+                            updateInfo.setBody(new ObjectMapper().writeValueAsString(seeker));
+                            for (Client client : clients) {
+                                if (!this.equals(client)) {
+                                    client.sendMessage(updateInfo);
+                                }
+                            }
+                            break;
+                        }
+                        case READY_FOR_VOTE: {
+                            seeker = new ObjectMapper().readValue(message.getBody(), Seeker.class);
+
+                            if (server.playersReadyToVoteRemaining() == 0) {
+                                Message alarm = new Message();
+                                alarm.setType(MessageType.CHAT);
+                                alarm.setBody(seeker.getName() + " готов к голосованию. Голосование начинается!");
+                                for (Client client : clients) {
+                                    client.sendMessage(alarm);
+                                }
+
+                            } else {
+                                Message alarm = new Message();
+                                alarm.setType(MessageType.CHAT);
+                                alarm.setBody(seeker.getName() + " готов к голосованию. Ожидание других игроков: " + server.playersReadyToVoteRemaining());
+                                for (Client client : clients) {
+                                    client.sendMessage(alarm);
+                                }
+                            }
                             break;
                         }
                     }

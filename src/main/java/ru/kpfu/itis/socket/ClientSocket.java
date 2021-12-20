@@ -115,15 +115,48 @@ public class ClientSocket extends Thread {
                     break;
                 }
                 case READY_FOR_START: {
-                    controller.loot.setDisable(false);
-                    controller.spy.setDisable(false);
-                    controller.readyForVote.setDisable(false);
+                    controller.loot.setVisible(true);
+                    controller.spy.setVisible(true);
+                    controller.readyForVote.setVisible(true);
 
-                    controller.userRevealPanel.setDisable(false);
-
+                    controller.userRevealPanel.setVisible(true);
+                    break;
+                }
+                case UPDATE_INFO: {
+                    try {
+                        Seeker seeker = new ObjectMapper().readValue(message.getBody(), Seeker.class);
+                        if (controller.getPlayer().getUuid().equals(seeker.getUuid())) {
+                            controller.setPlayer(seeker);
+                        } else {
+                            for (Seeker seeker1 : controller.getOpponents()) {
+                                if (seeker1.getUuid().equals(seeker.getUuid())) {
+                                    copySeekerModel(seeker, seeker1);
+                                }
+                            }
+                        }
+                    } catch (JsonProcessingException e) {
+                        e.printStackTrace();
+                    }
+                    break;
                 }
             }
         }
+    }
+
+    private void copySeekerModel(Seeker from, Seeker to) {
+        to.setName(from.getName());
+        to.setGender(from.getGender());
+        to.setAge(from.getAge());
+        to.setJob(from.getJob());
+        to.setNature(from.getNature());
+        to.setPast(from.getPast());
+        to.setGossip(from.getGossip());
+        to.setInventory(from.getInventory());
+
+        to.setLootingRemaining(from.getLootingRemaining());
+        to.setRevealedOwnInfo(from.getRevealedOwnInfo());
+        to.setRevealed(from.getRevealed());
+        to.setReadyForVote(from.getReadyForVote());
     }
 
     public void sendUserDataToServer(Seeker seeker) {

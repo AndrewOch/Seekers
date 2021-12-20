@@ -1,11 +1,14 @@
 package ru.kpfu.itis.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import ru.kpfu.itis.client.Seeker;
+import ru.kpfu.itis.enums.gameParameters.Item;
 import ru.kpfu.itis.protocols.Message;
 import ru.kpfu.itis.protocols.MessageType;
 import ru.kpfu.itis.socket.ClientSocket;
@@ -13,6 +16,7 @@ import ru.kpfu.itis.utils.GameUtils;
 
 import java.net.URL;
 import java.util.List;
+import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -84,6 +88,7 @@ public class Controller implements Initializable {
             usernameType.setEditable(false);
             clientSocket = new ClientSocket();
             clientSocket.connect(this, nickname);
+            gameUtils.setClientSocket(clientSocket);
         });
 
         sendMessage.setOnAction(actionEvent -> {
@@ -118,6 +123,14 @@ public class Controller implements Initializable {
         readyForVote.setOnAction(event -> {
             if (player.getRevealedOwnInfo()) {
                 player.setReadyForVote(!player.getReadyForVote());
+                Message message = new Message();
+                message.setType(MessageType.READY_FOR_VOTE);
+                try {
+                    message.setBody(new ObjectMapper().writeValueAsString(player));
+                } catch (JsonProcessingException e) {
+                    e.printStackTrace();
+                }
+                clientSocket.sendMessage(message);
             } else {
                 hint.setText("Вы ещё не раскрывали свою информацию в этом раунде!");
             }
@@ -164,6 +177,16 @@ public class Controller implements Initializable {
         player.getRevealed()[infoId] = true;
         userRevealPanel.setVisible(false);
         player.setRevealedOwnInfo(true);
+
+        Message message = new Message();
+        message.setType(MessageType.REVEAL_SELF);
+        try {
+            message.setBody(new ObjectMapper().writeValueAsString(player));
+            message.addHeader("revealed", getRevealedInfoAsString(player, infoId));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        clientSocket.sendMessage(message);
     }
 
     private void revealOpponentInfo(Integer infoId) {
@@ -171,6 +194,39 @@ public class Controller implements Initializable {
         showOpponentInfo();
         revealPanel.setVisible(false);
         opponentInfo.setVisible(true);
+
+        Message message = new Message();
+        message.setType(MessageType.REVEAL);
+        try {
+            message.setBody(new ObjectMapper().writeValueAsString(currentOpponent));
+            message.addHeader("revealed", getRevealedInfoAsString(currentOpponent, infoId));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        clientSocket.sendMessage(message);
+    }
+
+    private String getRevealedInfoAsString(Seeker seeker, Integer infoId) {
+        String revealedInfo = "";
+        switch (infoId) {
+            case 0 -> {
+                Integer age = seeker.getAge();
+                String agePostfix = "лет";
+                if (age % 10 == 1) {
+                    agePostfix = "год";
+                }
+                if (age % 10 > 1 && age % 10 < 5) {
+                    agePostfix = "года";
+                }
+                revealedInfo = seeker.getGender().getTitle() + ", " + age + " " + agePostfix;
+            }
+            case 1 -> revealedInfo = seeker.getJob().getTitle();
+            case 2 -> revealedInfo = seeker.getNature().getTitle();
+            case 3 -> revealedInfo = seeker.getPast().getTitle();
+            case 4 -> revealedInfo = seeker.getGossip().getTitle();
+            case 5 -> revealedInfo = seeker.getDream().getTitle();
+        }
+        return revealedInfo;
     }
 
     public void showOpponentInfo(UUID uuid) {
@@ -262,5 +318,6 @@ public class Controller implements Initializable {
     public List<Seeker> getOpponents() {
         return opponents;
     }
+
 }
 
