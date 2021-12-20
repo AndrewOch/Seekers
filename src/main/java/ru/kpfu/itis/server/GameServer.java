@@ -13,7 +13,7 @@ public class GameServer {
 
     private ServerSocket serverSocket;
 
-    private Integer playersNeeded = 4;
+    private Integer playersNeeded = 3;
 
     private List<Client> clients = new CopyOnWriteArrayList<>();
 
@@ -83,6 +83,16 @@ public class GameServer {
 
     public boolean readyToPlay() {
         return (playersNeeded <= clients.size());
+    }
+
+    public int playersReadyToVoteRemaining() {
+        int count = 0;
+        for (Client client : clients) {
+            if (client.getSeeker().getReadyForVote()) {
+                count++;
+            }
+        }
+        return count;
     }
 
     public int playersRemainingToPlay() {
