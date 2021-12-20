@@ -5,8 +5,11 @@ import ru.kpfu.itis.enums.gameParameters.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 
 public class Seeker {
+
+    private UUID uuid;
 
     private String name;
     private Gender gender;
@@ -24,9 +27,13 @@ public class Seeker {
 
     private boolean[] revealed = new boolean[6];
 
+    public Seeker() {
+    }
 
     public Seeker(String username) {
         Random random = new Random();
+
+        uuid = UUID.randomUUID();
 
         this.name = username;
         this.gender = Gender.random();
@@ -135,5 +142,13 @@ public class Seeker {
 
     public Dream getDream() {
         return dream;
+    }
+
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
     }
 }

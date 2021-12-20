@@ -1,19 +1,13 @@
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.layout.GridPane?>
-
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="ru.kpfu.itis.controller.Controller"
             prefHeight="720.0" prefWidth="1280.0"
-            stylesheets="style.css">
+            stylesheets="../css/style.css">
 
     <HBox xmlns="http://javafx.com/javafx"
-          xmlns:fx="http://javafx.com/fxml" spacing="20">
+          xmlns:fx="http://javafx.com/fxml" spacing="20" minWidth="300">
         <VBox xmlns="http://javafx.com/javafx"
               xmlns:fx="http://javafx.com/fxml">
             <Label fx:id="username" text="Имя"/>
@@ -28,13 +22,13 @@
 
             <VBox xmlns="http://javafx.com/javafx"
                   xmlns:fx="http://javafx.com/fxml" spacing="5">
-                <Button fx:id="loot" text="Обыскать башню"/>
-                <Button fx:id="spy" text="Посмотреть в палантир"/>
-                <Button fx:id="readyForVote" text="Готов к голосованию"/>
+                <Button fx:id="loot" text="Обыскать башню" visible="false"/>
+                <Button fx:id="spy" text="Посмотреть в палантир" visible="false"/>
+                <Button fx:id="readyForVote" text="Готов к голосованию" visible="false"/>
                 <Label fx:id="hint"/>
             </VBox>
 
-            <VBox fx:id="userRevealPanel" xmlns="http://javafx.com/javafx"
+            <VBox fx:id="userRevealPanel" visible="false" xmlns="http://javafx.com/javafx"
                   xmlns:fx="http://javafx.com/fxml" spacing="5">
                 <Label text="Раскрыть:"/>
 
@@ -47,29 +41,22 @@
             </VBox>
         </VBox>
         <VBox xmlns="http://javafx.com/javafx"
-              xmlns:fx="http://javafx.com/fxml" spacing="5">
-            <Button fx:id="opponent1" text="Имя"/>
-            <Button fx:id="opponent2" text="Игрок2"/>
-            <Button fx:id="opponent3" text="Игрок3"/>
-            <Button fx:id="opponent4" text="Игрок4"/>
-            <Button fx:id="opponent5" text="Игрок5"/>
-            <Button fx:id="opponent6" text="Игрок6"/>
-            <Button fx:id="opponent7" text="Игрок7"/>
-
+              xmlns:fx="http://javafx.com/fxml" spacing="5" fx:id="playersButtons">
+            <children/>
         </VBox>
         <VBox xmlns="http://javafx.com/javafx"
               xmlns:fx="http://javafx.com/fxml">
-            <Label fx:id="opponentUsername" text="Hello world!"/>
+            <Label fx:id="opponentUsername"/>
 
             <VBox fx:id="opponentInfo" xmlns="http://javafx.com/javafx"
-                  xmlns:fx="http://javafx.com/fxml" spacing="5">
-                <Label fx:id="opponentGenderAndAge" text="Hello world!"/>
-                <Label fx:id="opponentJob" text="Hello world!"/>
-                <Label fx:id="opponentNature" text="Hello world!"/>
-                <Label fx:id="opponentPast" text="Hello world!"/>
-                <Label fx:id="opponentGossip" text="Hello world!"/>
-                <Label fx:id="opponentInventory" text="Hello world!"/>
-                <Label fx:id="opponentDream" text="Hello world!"/>
+                  xmlns:fx="http://javafx.com/fxml" spacing="5" >
+                <Label fx:id="opponentGenderAndAge"/>
+                <Label fx:id="opponentJob"/>
+                <Label fx:id="opponentNature"/>
+                <Label fx:id="opponentPast"/>
+                <Label fx:id="opponentGossip"/>
+                <Label fx:id="opponentInventory"/>
+                <Label fx:id="opponentDream"/>
             </VBox>
 
             <VBox fx:id="revealPanel" visible="false" xmlns="http://javafx.com/javafx"
@@ -84,11 +71,23 @@
                 <Button fx:id="revealDream" text="Мечта"/>
             </VBox>
         </VBox>
+        <VBox>
+            <HBox layoutY="20" spacing="10" layoutX="10">
+                <TextField fx:id="usernameType" minWidth="600" promptText="username"/>
+                <Button fx:id="loginButton" minWidth="90">Войти</Button>
+            </HBox>
+            <ScrollPane minWidth="700" minHeight="640"
+                        maxWidth="400" maxHeight="800" layoutY="100" layoutX="10">
+                <VBox fx:id="messages" spacing="5">
+                    <children/>
+                </VBox>
+            </ScrollPane>
+            <HBox layoutY="750" layoutX="10" spacing="10">
+                <TextField fx:id="messageText" minWidth="600" promptText="Введите сообщение" disable="true"/>
+                <Button fx:id="sendMessage" minWidth="90" disable="true">Отправить</Button>
+            </HBox>
+        </VBox>
     </HBox>
 
-    <VBox fx:id="chat" visible="false" xmlns="http://javafx.com/javafx"
-          xmlns:fx="http://javafx.com/fxml">
-        <Label text="======Чат======"/>
-    </VBox>
 
 </AnchorPane>

@@ -3,15 +3,19 @@ package ru.kpfu.itis.controller;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import ru.kpfu.itis.client.Seeker;
+import ru.kpfu.itis.protocols.Message;
+import ru.kpfu.itis.protocols.MessageType;
 import ru.kpfu.itis.socket.ClientSocket;
 import ru.kpfu.itis.utils.GameUtils;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.UUID;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Controller implements Initializable {
 
@@ -37,14 +41,6 @@ public class Controller implements Initializable {
     public Button spy;
     public Button readyForVote;
 
-    public Button opponent1;
-    public Button opponent2;
-    public Button opponent3;
-    public Button opponent4;
-    public Button opponent5;
-    public Button opponent6;
-    public Button opponent7;
-
     public Label hint;
 
     public VBox opponentInfo;
@@ -64,61 +60,45 @@ public class Controller implements Initializable {
     public Button userRPast;
     public Button userRGossip;
     public Button userRDream;
+    public TextField usernameType;
+    public Button loginButton;
+    public VBox messages;
+    public TextField messageText;
+    public Button sendMessage;
+    public VBox playersButtons;
 
     private GameUtils gameUtils;
     private ClientSocket clientSocket;
 
-    private List<Seeker> opponents;
-    private Seeker currentOpponent;
     private Seeker player;
+    private List<Seeker> opponents = new CopyOnWriteArrayList<>();
+    private Seeker currentOpponent;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         gameUtils = new GameUtils();
-        clientSocket = new ClientSocket();
-        clientSocket.connect();
 
-        player = new Seeker("Fernando");
+        loginButton.setOnMouseClicked(event -> {
+            String nickname = usernameType.getText();
+            loginButton.setDisable(true);
+            usernameType.setEditable(false);
+            clientSocket = new ClientSocket();
+            clientSocket.connect(this, nickname);
+        });
 
-        opponents = new ArrayList<>();
-        opponents.add(new Seeker("Ann"));
-        opponents.add(new Seeker("Tim"));
-        opponents.add(new Seeker("Edna"));
-
-        opponent1.setText(opponents.get(0).getName());
-        opponent2.setText(opponents.get(1).getName());
-        opponent3.setText(opponents.get(2).getName());
-        opponent4.setVisible(false);
-        opponent5.setVisible(false);
-        opponent6.setVisible(false);
-        opponent7.setVisible(false);
-
-        Integer age = player.getAge();
-
-        String agePostfix = "лет";
-        if (age % 10 == 1) {
-            agePostfix = "год";
-        }
-
-        if (age % 10 > 1 && age % 10 < 5) {
-            agePostfix = "года";
-        }
-
-        username.setText(player.getName());
-        userGenderAndAge.setText(player.getGender().getTitle() + ", " + age + " " + agePostfix);
-        userJob.setText("Работа: " + player.getJob().getTitle());
-        userNature.setText("Характер: " + player.getNature().getTitle());
-        userPast.setText("Прошлое: " + player.getPast().getTitle());
-        userGossip.setText("Слухи: " + player.getGossip().getTitle());
-        userInventory.setText("Инвентарь: " + player.getInventory());
-        userDream.setText("Мечта: " + player.getDream().getTitle());
-
-        showOpponentInfo(0);
+        sendMessage.setOnAction(actionEvent -> {
+            Message message = new Message();
+            message.setType(MessageType.CHAT);
+            message.setBody(messageText.getText());
+            clientSocket.sendMessage(message);
+            messageText.clear();
+        });
 
         loot.setOnAction(event -> {
             if (player.getLootingRemaining() > 0) {
                 gameUtils.loot(player);
                 userInventory.setText("Инвентарь: " + player.getInventory());
+                clientSocket.sendUserDataToServer(player);
             } else {
                 hint.setText("Вы больше не можете обыскивать в этом раунде!");
             }
@@ -129,8 +109,6 @@ public class Controller implements Initializable {
                 gameUtils.spendItems(player);
                 userInventory.setText("Инвентарь: " + player.getInventory());
 
-
-                //opponentInfo.setVisible(false);
                 revealPanel.setVisible(true);
             } else {
                 hint.setText("На это действие требуется потратить 2 предмета!");
@@ -144,14 +122,6 @@ public class Controller implements Initializable {
                 hint.setText("Вы ещё не раскрывали свою информацию в этом раунде!");
             }
         });
-
-        opponent1.setOnAction(event -> showOpponentInfo(0));
-        opponent2.setOnAction(event -> showOpponentInfo(1));
-        opponent3.setOnAction(event -> showOpponentInfo(2));
-        opponent4.setOnAction(event -> showOpponentInfo(3));
-        opponent5.setOnAction(event -> showOpponentInfo(4));
-        opponent6.setOnAction(event -> showOpponentInfo(5));
-        opponent7.setOnAction(event -> showOpponentInfo(6));
 
         revealGenderAndAge.setOnAction(event -> revealOpponentInfo(0));
         revealJob.setOnAction(event -> revealOpponentInfo(1));
@@ -168,6 +138,27 @@ public class Controller implements Initializable {
         userRDream.setOnAction(event -> revealOwnInfo(5));
     }
 
+    public void showPlayerInfo() {
+
+        String agePostfix = "лет";
+        if (player.getAge() % 10 == 1) {
+            agePostfix = "год";
+        }
+
+        if (player.getAge() % 10 > 1 && player.getAge() % 10 < 5) {
+            agePostfix = "года";
+        }
+
+        username.setText(player.getName());
+        userGenderAndAge.setText(player.getGender().getTitle() + ", " + player.getAge() + " " + agePostfix);
+        userJob.setText("Работа: " + player.getJob().getTitle());
+        userNature.setText("Характер: " + player.getNature().getTitle());
+        userPast.setText("Прошлое: " + player.getPast().getTitle());
+        userGossip.setText("Слухи: " + player.getGossip().getTitle());
+        userInventory.setText("Инвентарь: " + player.getInventory());
+        userDream.setText("Мечта: " + player.getDream().getTitle());
+    }
+
 
     private void revealOwnInfo(Integer infoId) {
         player.getRevealed()[infoId] = true;
@@ -182,12 +173,12 @@ public class Controller implements Initializable {
         opponentInfo.setVisible(true);
     }
 
-    private void showOpponentInfo(Integer id) {
-        currentOpponent = opponents.get(id);
+    public void showOpponentInfo(UUID uuid) {
+        currentOpponent = opponents.stream().filter(op -> op.getUuid() == uuid).findFirst().get();
         showOpponentInfo();
     }
 
-    private void showOpponentInfo() {
+    public void showOpponentInfo() {
         opponentUsername.setText(currentOpponent.getName());
 
         boolean[] revealed = currentOpponent.getRevealed();
@@ -258,6 +249,18 @@ public class Controller implements Initializable {
         }
 
         opponentInventory.setText("Инвентарь: " + currentOpponent.getInventory());
+    }
+
+    public Seeker getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(Seeker player) {
+        this.player = player;
+    }
+
+    public List<Seeker> getOpponents() {
+        return opponents;
     }
 }
 
