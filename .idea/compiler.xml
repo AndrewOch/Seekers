@@ -16,11 +16,14 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="Seekers" />
+        <module name="JavaFX" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="JavaFX" target="16" />
+      <module name="JavaFX (1)" target="16" />
       <module name="Seekers" target="16" />
+      <module name="Server" target="16" />
     </bytecodeTargetLevel>
   </component>
 </project>

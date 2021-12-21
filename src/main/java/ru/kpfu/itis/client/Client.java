@@ -1,6 +1,7 @@
 package ru.kpfu.itis.client;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ru.kpfu.itis.protocols.Message;
 import ru.kpfu.itis.protocols.MessageType;

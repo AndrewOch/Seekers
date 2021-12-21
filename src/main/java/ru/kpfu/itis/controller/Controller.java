@@ -8,7 +8,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import ru.kpfu.itis.client.Seeker;
-import ru.kpfu.itis.enums.gameParameters.Item;
 import ru.kpfu.itis.protocols.Message;
 import ru.kpfu.itis.protocols.MessageType;
 import ru.kpfu.itis.socket.ClientSocket;
@@ -16,7 +15,6 @@ import ru.kpfu.itis.utils.GameUtils;
 
 import java.net.URL;
 import java.util.List;
-import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -32,32 +30,12 @@ public class Controller implements Initializable {
     public Label userInventory;
     public Label userDream;
 
-    public Label opponentUsername;
-    public Label opponentGenderAndAge;
-    public Label opponentJob;
-    public Label opponentNature;
-    public Label opponentPast;
-    public Label opponentGossip;
-    public Label opponentInventory;
-    public Label opponentDream;
-
     public Button loot;
     public Button spy;
     public Button readyForVote;
 
     public Label hint;
 
-    public VBox opponentInfo;
-    public VBox revealPanel;
-
-    public Button revealGenderAndAge;
-    public Button revealJob;
-    public Button revealNature;
-    public Button revealPast;
-    public Button revealGossip;
-    public Button revealDream;
-
-    public VBox userRevealPanel;
     public Button userRGenderAndAge;
     public Button userRJob;
     public Button userRNature;
@@ -76,7 +54,9 @@ public class Controller implements Initializable {
 
     private Seeker player;
     private List<Seeker> opponents = new CopyOnWriteArrayList<>();
-    private Seeker currentOpponent;
+    private Seeker currentSeeker;
+
+    private boolean readyForRevealSomeOne = false;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -113,8 +93,7 @@ public class Controller implements Initializable {
             if (player.getInventory().size() >= 2) {
                 gameUtils.spendItems(player);
                 userInventory.setText("Инвентарь: " + player.getInventory());
-
-                revealPanel.setVisible(true);
+                readyForRevealSomeOne = true;
             } else {
                 hint.setText("На это действие требуется потратить 2 предмета!");
             }
@@ -136,22 +115,22 @@ public class Controller implements Initializable {
             }
         });
 
-        revealGenderAndAge.setOnAction(event -> revealOpponentInfo(0));
-        revealJob.setOnAction(event -> revealOpponentInfo(1));
-        revealNature.setOnAction(event -> revealOpponentInfo(2));
-        revealPast.setOnAction(event -> revealOpponentInfo(3));
-        revealGossip.setOnAction(event -> revealOpponentInfo(4));
-        revealDream.setOnAction(event -> revealOpponentInfo(5));
-
-        userRGenderAndAge.setOnAction(event -> revealOwnInfo(0));
-        userRJob.setOnAction(event -> revealOwnInfo(1));
-        userRNature.setOnAction(event -> revealOwnInfo(2));
-        userRPast.setOnAction(event -> revealOwnInfo(3));
-        userRGossip.setOnAction(event -> revealOwnInfo(4));
-        userRDream.setOnAction(event -> revealOwnInfo(5));
+        userRGenderAndAge.setOnAction(event -> revealInfo(0));
+        userRJob.setOnAction(event -> revealInfo(1));
+        userRNature.setOnAction(event -> revealInfo(2));
+        userRPast.setOnAction(event -> revealInfo(3));
+        userRGossip.setOnAction(event -> revealInfo(4));
+        userRDream.setOnAction(event -> revealInfo(5));
     }
 
     public void showPlayerInfo() {
+        currentSeeker = player;
+
+        if (!player.getRevealedOwnInfo()) {
+            showRevealButtons(player);
+        } else {
+            closeRevealButtons();
+        }
 
         String agePostfix = "лет";
         if (player.getAge() % 10 == 1) {
@@ -172,10 +151,16 @@ public class Controller implements Initializable {
         userDream.setText("Мечта: " + player.getDream().getTitle());
     }
 
+    private void revealInfo(Integer infoId) {
+        if (currentSeeker.equals(this)) {
+            revealOwnInfo(infoId);
+        } else {
+            revealOpponentInfo(infoId);
+        }
+    }
 
     private void revealOwnInfo(Integer infoId) {
         player.getRevealed()[infoId] = true;
-        userRevealPanel.setVisible(false);
         player.setRevealedOwnInfo(true);
 
         Message message = new Message();
@@ -190,16 +175,14 @@ public class Controller implements Initializable {
     }
 
     private void revealOpponentInfo(Integer infoId) {
-        currentOpponent.getRevealed()[infoId] = true;
+        currentSeeker.getRevealed()[infoId] = true;
         showOpponentInfo();
-        revealPanel.setVisible(false);
-        opponentInfo.setVisible(true);
 
         Message message = new Message();
         message.setType(MessageType.REVEAL);
         try {
-            message.setBody(new ObjectMapper().writeValueAsString(currentOpponent));
-            message.addHeader("revealed", getRevealedInfoAsString(currentOpponent, infoId));
+            message.setBody(new ObjectMapper().writeValueAsString(currentSeeker));
+            message.addHeader("revealed", getRevealedInfoAsString(currentSeeker, infoId));
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
@@ -230,17 +213,23 @@ public class Controller implements Initializable {
     }
 
     public void showOpponentInfo(UUID uuid) {
-        currentOpponent = opponents.stream().filter(op -> op.getUuid() == uuid).findFirst().get();
+        currentSeeker = opponents.stream().filter(op -> op.getUuid() == uuid).findFirst().get();
         showOpponentInfo();
     }
 
     public void showOpponentInfo() {
-        opponentUsername.setText(currentOpponent.getName());
+        username.setText(currentSeeker.getName());
 
-        boolean[] revealed = currentOpponent.getRevealed();
+        if (readyForRevealSomeOne) {
+            showRevealButtons(currentSeeker);
+        } else {
+            closeRevealButtons();
+        }
+
+        boolean[] revealed = currentSeeker.getRevealed();
 
         if (revealed[0]) {
-            Integer age = currentOpponent.getAge();
+            Integer age = currentSeeker.getAge();
 
             String agePostfix = "лет";
             if (age % 10 == 1) {
@@ -251,60 +240,45 @@ public class Controller implements Initializable {
                 agePostfix = "года";
             }
 
-            opponentGenderAndAge.setText(currentOpponent.getGender().getTitle() + ", " + age + " " + agePostfix);
-            revealGenderAndAge.setVisible(false);
+            userGenderAndAge.setText(currentSeeker.getGender().getTitle() + ", " + age + " " + agePostfix);
         } else {
-            opponentGenderAndAge.setText("??? ???");
-            revealGenderAndAge.setVisible(true);
+            userGenderAndAge.setText("??? ???");
         }
 
         if (revealed[1]) {
-            opponentJob.setText("Работа: " + currentOpponent.getJob().getTitle());
-            revealJob.setVisible(false);
-
+            userJob.setText("Работа: " + currentSeeker.getJob().getTitle());
         } else {
-            opponentJob.setText("Работа: ???");
-            revealJob.setVisible(true);
-
+            userJob.setText("Работа: ???");
         }
 
         if (revealed[2]) {
-            opponentNature.setText("Характер: " + currentOpponent.getNature().getTitle());
-            revealNature.setVisible(false);
+            userNature.setText("Характер: " + currentSeeker.getNature().getTitle());
 
         } else {
-            opponentNature.setText("Характер: ???");
-            revealNature.setVisible(true);
-
+            userNature.setText("Характер: ???");
         }
 
         if (revealed[3]) {
-            opponentPast.setText("Прошлое: " + currentOpponent.getPast().getTitle());
-            revealPast.setVisible(false);
+            userPast.setText("Прошлое: " + currentSeeker.getPast().getTitle());
 
         } else {
-            opponentPast.setText("Прошлое: ???");
-            revealPast.setVisible(true);
-
+            userPast.setText("Прошлое: ???");
         }
 
         if (revealed[4]) {
-            opponentGossip.setText("Слухи: " + currentOpponent.getGossip().getTitle());
-            revealGossip.setVisible(false);
+            userGossip.setText("Слухи: " + currentSeeker.getGossip().getTitle());
         } else {
-            opponentGossip.setText("Слухи: ???");
-            revealGossip.setVisible(true);
+            userGossip.setText("Слухи: ???");
         }
 
         if (revealed[5]) {
-            opponentDream.setText("Мечта: " + currentOpponent.getDream().getTitle());
-            revealDream.setVisible(false);
+            userDream.setText("Мечта: " + currentSeeker.getDream().getTitle());
         } else {
-            opponentDream.setText("Мечта: ???");
-            revealDream.setVisible(true);
+            userDream.setText("Мечта: ???");
         }
 
-        opponentInventory.setText("Инвентарь: " + currentOpponent.getInventory());
+        userInventory.setText("Инвентарь: " + currentSeeker.getInventory());
+        readyForRevealSomeOne = false;
     }
 
     public Seeker getPlayer() {
@@ -317,6 +291,26 @@ public class Controller implements Initializable {
 
     public List<Seeker> getOpponents() {
         return opponents;
+    }
+
+    public void showRevealButtons(Seeker seeker) {
+
+        if (!seeker.getRevealed()[0]) userRGenderAndAge.setVisible(true);
+        if (!seeker.getRevealed()[1]) userRJob.setVisible(true);
+        if (!seeker.getRevealed()[2]) userRNature.setVisible(true);
+        if (!seeker.getRevealed()[3]) userRPast.setVisible(true);
+        if (!seeker.getRevealed()[4]) userRGossip.setVisible(true);
+        if (!seeker.getRevealed()[5]) userRDream.setVisible(true);
+    }
+
+    public void closeRevealButtons() {
+
+        userRGenderAndAge.setVisible(false);
+        userRJob.setVisible(false);
+        userRNature.setVisible(false);
+        userRPast.setVisible(false);
+        userRDream.setVisible(false);
+        userRGossip.setVisible(false);
     }
 
 }

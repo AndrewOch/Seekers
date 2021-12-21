@@ -91,9 +91,14 @@ public class ClientSocket extends Thread {
 
                         Platform.runLater(() -> controller.showPlayerInfo());
 
+                        Button button = new Button();
+                        button.setText(seeker.getName());
+                        button.setOnAction(actionEvent -> controller.showPlayerInfo());
+                        Platform.runLater(() -> controller.playersButtons.getChildren().add(button));
+
                         Platform.runLater(() -> controller.messageText.setDisable(false));
                         Platform.runLater(() -> controller.sendMessage.setDisable(false));
-                    } catch (JsonProcessingException e) {
+                    } catch (IOException e) {
                         e.printStackTrace();
                     }
                     break;
@@ -109,7 +114,7 @@ public class ClientSocket extends Thread {
                         button.setText(seeker.getName());
                         button.setOnAction(actionEvent -> controller.showOpponentInfo(seeker.getUuid()));
                         Platform.runLater(() -> controller.playersButtons.getChildren().add(button));
-                    } catch (JsonProcessingException e) {
+                    } catch (IOException e) {
                         e.printStackTrace();
                     }
                     break;
@@ -118,8 +123,6 @@ public class ClientSocket extends Thread {
                     controller.loot.setVisible(true);
                     controller.spy.setVisible(true);
                     controller.readyForVote.setVisible(true);
-
-                    controller.userRevealPanel.setVisible(true);
                     break;
                 }
                 case UPDATE_INFO: {
@@ -134,7 +137,7 @@ public class ClientSocket extends Thread {
                                 }
                             }
                         }
-                    } catch (JsonProcessingException e) {
+                    } catch (IOException e) {
                         e.printStackTrace();
                     }
                     break;
